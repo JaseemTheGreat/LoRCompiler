@@ -1,0 +1,25 @@
+name: Build Mod DLL
+
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Setup NuGet
+      uses: nuget/setup-nuget@v2
+
+    - name: Download Game References
+      run: |
+        powershell -Command "Invoke-WebRequest -Uri 'https://github.com' -OutFile 'refs.zip'"
+        powershell -Command "Expand-Archive -Path 'refs.zip' -DestinationPath '.'"
+
+    - name: Compile Mod
+      run: msbuild MyMod.csproj /p:Configuration=Release
