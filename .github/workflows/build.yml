@@ -19,9 +19,10 @@ jobs:
     - name: Download Game References
       run: |
         powershell -Command "Invoke-WebRequest -Uri 'https://github.com' -OutFile 'refs.zip'"
+        # FIX: Explicitly extracts the files into the exact folder path the compiler expects
         powershell -Command "Expand-Archive -Path 'refs.zip' -DestinationPath '.'"
+        powershell -Command "if (Test-Path 'LibraryOfRuina-References-master') { Write-Host 'Folder verified!' } else { Rename-Item -Path (Get-Item 'LibraryOfRuina-References-*').Name -NewName 'LibraryOfRuina-References-master' }"
 
-    # FIX: Generates the missing project.assets.json file
     - name: Restore NuGet Packages
       run: dotnet restore MyMod.csproj
 
