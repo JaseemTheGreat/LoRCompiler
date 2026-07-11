@@ -21,5 +21,9 @@ jobs:
         powershell -Command "Invoke-WebRequest -Uri 'https://github.com' -OutFile 'refs.zip'"
         powershell -Command "Expand-Archive -Path 'refs.zip' -DestinationPath '.'"
 
+    # FIX: Generates the missing project.assets.json file
+    - name: Restore NuGet Packages
+      run: dotnet restore MyMod.csproj
+
     - name: Compile Mod
       run: msbuild MyMod.csproj /p:Configuration=Release
